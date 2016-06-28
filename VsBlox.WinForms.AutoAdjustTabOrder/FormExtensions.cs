@@ -63,8 +63,8 @@ namespace VsBlox.WinForms.AutoAdjustTabOrder
 
       const int bandWidthY = 10;
 
-      // Sorteer op middelpunt van de hoogte van de control en
-      // maak rijen waar de controls met ongeveer dezelfde y waarde inzitten.
+      // Sort on midpoint of the height of the control.
+      // Create rows of controls with (more or less) the same midpoint y value.
       var rows = new List<List<Control>>();
       var lastY = -bandWidthY;
 
@@ -72,18 +72,18 @@ namespace VsBlox.WinForms.AutoAdjustTabOrder
       {
         var currentY = control.Location.Y;
 
-        // Als de afwijking t.o.v. de vorige groter of gelijk is aan de bandbreedte, dan starten we een nieuwe rij.
+        // Start a new row when the deviation is greater then the threshold/bandwidth.
         if (Math.Abs(currentY - lastY) >= bandWidthY || rows.Count == 0) rows.Add(new List<Control>());
 
-        // Voeg control toe aan een rij.
+        // Add control to the current row.
         rows[rows.Count - 1].Add(control);
 
         lastY = currentY;
       }
 
-      // Doorloop de rijen.
-      // Per rij: sorteer op X
-      // Per X: zet de tab volgorde.
+      // Loop through the rows.
+      // For each row: sort on X
+      // For X: set the correct tab order.
       var tabIndex = 0;
 
       foreach (var control in rows.Select(row => row.OrderBy(c => c.Location.X)).SelectMany(rowControls => rowControls))
